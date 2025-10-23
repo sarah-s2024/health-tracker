@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日健康信息记录 - 首页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: slideDown 0.6s ease;
+        }
+
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: slideUp 0.6s ease backwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .card-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 15px;
+        }
+
+        .card-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .card-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .features {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 30px;
+            animation: slideUp 0.6s ease 0.3s backwards;
+        }
+
+        .features h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            font-size: 1.8em;
+        }
+
+        .feature-text {
+            font-size: 0.95em;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-top: 40px;
+            font-size: 0.9em;
+            animation: slideUp 0.6s ease 0.4s backwards;
+        }
+
+        .quick-tips {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            animation: slideUp 0.6s ease 0.5s backwards;
+        }
+
+        .quick-tips h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .tip {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .logo {
+                font-size: 3em;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📋</div>
+            <h1>每日健康信息记录</h1>
+            <p>记录您的每日健康状态，发现身体的规律</p>
+        </div>
+
+        <div class="cards-grid">
+            <a href="index.html" class="card" onclick="event.preventDefault(); window.location.href='index.html';">
+                <div class="card-icon">📝</div>
+                <div class="card-title">填写记录</div>
+                <div class="card-description">
+                    记录今天的睡眠、头痛、认知状态和压力等多维度健康信息
+                </div>
+                <button class="card-button">开始记录</button>
+            </a>
+
+            <a href="analytics.html" class="card" onclick="event.preventDefault(); window.location.href='analytics.html';">
+                <div class="card-icon">📊</div>
+                <div class="card-title">数据分析</div>
+                <div class="card-description">
+                    查看可视化的趋势图表，了解您的健康数据变化
+                </div>
+                <button class="card-button">查看分析</button>
+            </a>
+
+            <a href="quickstart.html" class="card">
+                <div class="card-icon">🚀</div>
+                <div class="card-title">快速入门</div>
+                <div class="card-description">
+                    新手指南：从第一条记录开始，5分钟学会使用
+                </div>
+                <button class="card-button" onclick="window.location.href='quickstart.html'">查看指南</button>
+            </a>
+        </div>
+
+        <div class="features">
+            <h2>✨ 主要功能</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <span class="feature-icon">😴</span>
+                    <span class="feature-text">睡眠追踪</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🤕</span>
+                    <span class="feature-text">头痛管理</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🧠</span>
+                    <span class="feature-text">认知评估</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">😰</span>
+                    <span class="feature-text">压力监测</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📈</span>
+                    <span class="feature-text">趋势分析</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📥</span>
+                    <span class="feature-text">数据导出</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-tips">
+            <h3>💡 快速提示</h3>
+            <div class="tips-list">
+                <div class="tip">
+                    <strong>每天记录</strong><br>
+                    最佳时间是睡前或早起，坚持2周后能看到趋势
+                </div>
+                <div class="tip">
+                    <strong>准确评分</strong><br>
+                    参考各项的说明进行评分，确保数据的一致性
+                </div>
+                <div class="tip">
+                    <strong>定期备份</strong><br>
+                    每周导出一次数据到 Excel，防止数据丢失
+                </div>
+                <div class="tip">
+                    <strong>发现模式</strong><br>
+                    寻找压力、睡眠与症状的关联，识别健康的触发因素
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💾 数据保存在您的浏览器本地，完全私密安全</p>
+            <p style="margin-top: 10px; opacity: 0.7;">版本 1.0 | 为更好的健康而设计</p>
+        </div>
+    </div>
+
+    <script>
+        // 检查浏览器对 localStorage 的支持
+        function checkLocalStorage() {
+            try {
+                const test = '__localStorage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                alert('您的浏览器不支持本地存储，某些功能可能无法正常使用。建议使用最新版本的 Chrome、Firefox 或 Safari。');
+                return false;
+            }
+        }
+
+        // 页面加载时检查
+        document.addEventListener('DOMContentLoaded', checkLocalStorage);
+
+        // 添加卡片点击事件
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // 如果点击的是按钮，让链接处理点击
+                if (this.href && !e.target.closest('.card-button')) {
+                    window.location.href = this.href;
+                }
+            });
+        });
+
+        // 记录访问信息（用于调试）
+        console.log('%c欢迎使用每日健康信息记录系统', 'font-size: 20px; color: #667eea; font-weight: bold;');
+        console.log('版本: 1.0');
+        console.log('在浏览器中已成功加载');
+    </script>
+</body>
+</html>

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康数据分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .records-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .records-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .records-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 健康数据分析</h1>
+            <p>查看您的健康数据统计和趋势分析</p>
+        </header>
+
+        <div class="nav-buttons">
+            <a href="start.html" class="nav-btn">🏠 返回首页</a>
+            <button class="nav-btn" onclick="location.reload()">🔄 刷新数据</button>
+        </div>
+
+        <div class="content" id="content">
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h2>暂无数据</h2>
+                <p>请先在<a href="start.html">记录表单</a>中填写一些数据</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chartInstances = {};
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('zh-CN');
+        }
+
+        function createChart(ctx, type, data, options = {}) {
+            if (chartInstances[ctx.canvas.id]) {
+                chartInstances[ctx.canvas.id].destroy();
+            }
+            const chart = new Chart(ctx, {
+                type: type,
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    ...options
+                }
+            });
+            chartInstances[ctx.canvas.id] = chart;
+            return chart;
+        }
+
+        function renderAnalytics() {
+            const records = JSON.parse(localStorage.getItem('healthRecords') || '[]');
+            
+            if (records.length === 0) {
+                document.getElementById('content').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h2>暂无数据</h2>
+                        <p>请先在<a href="start.html">记录表单</a>中填写一些数据</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 计算统计数据
+            const stats = calculateStats(records);
+            const html = generateHTML(records, stats);
+            document.getElementById('content').innerHTML = html;
+
+            // 创建图表
+            setTimeout(() => {
+                createCharts(records);
+            }, 0);
+        }
+
+        function calculateStats(records) {
+            const validSleep = records.filter(r => r.sleepDuration);
+            const validQuality = records.filter(r => r.sleepQuality);
+            const validHeadaches = records.filter(r => r.headacheIntensity && r.headacheIntensity > 0);
+            const validStress = records.filter(r => r.stressLevel);
+
+            return {
+                totalRecords: records.length,
+                avgSleep: validSleep.length > 0 ? (validSleep.reduce((sum, r) => sum + parseFloat(r.sleepDuration || 0), 0) / validSleep.length).toFixed(1) : 'N/A',
+                avgQuality: validQuality.length > 0 ? (validQuality.reduce((sum, r) => sum + parseInt(r.sleepQuality || 0), 0) / validQuality.length).toFixed(1) : 'N/A',
+                headacheFrequency: validHeadaches.length,
+                avgStress: validStress.length > 0 ? (validStress.reduce((sum, r) => sum + parseInt(r.stressLevel || 0), 0) / validStress.length).toFixed(1) : 'N/A',
+            };
+        }
+
+        function generateHTML(records, stats) {
+            return `
+                <div class="controls">
+                    <button class="btn" onclick="exportToCSV()">📥 导出CSV</button>
+                    <button class="btn" onclick="printPage()">🖨️ 打印</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">记录总数</div>
+                        <div class="stat-value">${stats.totalRecords}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">平均睡眠时长</div>
+                        <div class="stat-value">${stats.avgSleep}h</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">平均睡眠质量</div>
+                        <div class="stat-value">${stats.avgQuality}/5</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">头痛发作次数</div>
+                        <div class="stat-value">${stats.headacheFrequency}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">平均压力等级</div>
+                        <div class="stat-value">${stats.avgStress}/10</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-title">睡眠时长趋势</div>
+                        <div class="chart-wrapper">
+                            <canvas id="sleepDurationChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">睡眠质量趋势</div>
+                        <div class="chart-wrapper">
+                            <canvas id="sleepQualityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">头痛强度分布</div>
+                        <div class="chart-wrapper">
+                            <canvas id="headacheChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">压力等级趋势</div>
+                        <div class="chart-wrapper">
+                            <canvas id="stressChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">认知状态平均分</div>
+                        <div class="chart-wrapper">
+                            <canvas id="cognitiveChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">头痛症状统计</div>
+                        <div class="chart-wrapper">
+                            <canvas id="symptomsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">详细记录</div>
+                    <table class="records-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>睡眠</th>
+                                <th>睡眠质量</th>
+                                <th>头痛强度</th>
+                                <th>鼻腔通畅度</th>
+                                <th>压力等级</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${records.map((r, i) => `
+                                <tr>
+                                    <td>${formatDate(r.date)}</td>
+                                    <td>${r.sleepDuration ? r.sleepDuration + 'h' : '-'}</td>
+                                    <td>${r.sleepQuality ? r.sleepQuality + '/5' : '-'}</td>
+                                    <td>${r.headacheIntensity ? r.headacheIntensity + '/10' : '-'}</td>
+                                    <td>${r.nasalPatency ? r.nasalPatency + '/5' : '-'}</td>
+                                    <td>${r.stressLevel ? r.stressLevel + '/10' : '-'}</td>
+                                    <td>${r.notes ? r.notes.substring(0, 30) + '...' : '-'}</td>
+                                    <td>
+                                        <button class="delete-btn" onclick="deleteRecord(${i})">删除</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function createCharts(records) {
+            // 睡眠时长趋势
+            const sleepData = records.map(r => ({
+                date: r.date,
+                duration: parseFloat(r.sleepDuration || 0)
+            }));
+            
+            createChart(
+                document.getElementById('sleepDurationChart').getContext('2d'),
+                'line',
+                {
+                    labels: sleepData.map(d => formatDate(d.date)),
+                    datasets: [{
+                        label: '睡眠时长 (小时)',
+                        data: sleepData.map(d => d.duration),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 12
+                        }
+                    }
+                }
+            );
+
+            // 睡眠质量趋势
+            const qualityData = records.map(r => ({
+                date: r.date,
+                quality: parseInt(r.sleepQuality || 0)
+            }));
+
+            createChart(
+                document.getElementById('sleepQualityChart').getContext('2d'),
+                'line',
+                {
+                    labels: qualityData.map(d => formatDate(d.date)),
+                    datasets: [{
+                        label: '睡眠质量',
+                        data: qualityData.map(d => d.quality),
+                        borderColor: '#764ba2',
+                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            );
+
+            // 头痛强度分布
+            const headaches = records.filter(r => r.headacheIntensity && r.headacheIntensity > 0);
+            const headacheIntensities = headaches.map(r => parseInt(r.headacheIntensity));
+
+            createChart(
+                document.getElementById('headacheChart').getContext('2d'),
+                'bar',
+                {
+                    labels: headaches.map(r => formatDate(r.date)),
+                    datasets: [{
+                        label: '头痛强度',
+                        data: headacheIntensities,
+                        backgroundColor: 'rgba(220, 100, 100, 0.7)',
+                        borderColor: 'rgba(220, 100, 100, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10
+                        }
+                    }
+                }
+            );
+
+            // 压力等级趋势
+            const stressData = records.map(r => ({
+                date: r.date,
+                stress: parseInt(r.stressLevel || 0)
+            }));
+
+            createChart(
+                document.getElementById('stressChart').getContext('2d'),
+                'line',
+                {
+                    labels: stressData.map(d => formatDate(d.date)),
+                    datasets: [{
+                        label: '压力等级',
+                        data: stressData.map(d => d.stress),
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10
+                        }
+                    }
+                }
+            );
+
+            // 认知状态平均分
+            const avgCognitive = {
+                memory: 0,
+                decision: 0,
+                processing: 0
+            };
+            let cognitiveCount = 0;
+
+            records.forEach(r => {
+                if (r.workingMemory) {
+                    avgCognitive.memory += parseInt(r.workingMemory);
+                    cognitiveCount++;
+                }
+                if (r.decisionFatigue) {
+                    avgCognitive.decision += parseInt(r.decisionFatigue);
+                }
+                if (r.processingSpeed) {
+                    avgCognitive.processing += parseInt(r.processingSpeed);
+                }
+            });
+
+            if (cognitiveCount > 0) {
+                avgCognitive.memory /= cognitiveCount;
+                avgCognitive.decision /= cognitiveCount;
+                avgCognitive.processing /= cognitiveCount;
+            }
+
+            createChart(
+                document.getElementById('cognitiveChart').getContext('2d'),
+                'radar',
+                {
+                    labels: ['工作记忆', '决策能力', '信息处理速度'],
+                    datasets: [{
+                        label: '平均认知状态',
+                        data: [avgCognitive.memory, avgCognitive.decision, avgCognitive.processing],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        borderWidth: 2
+                    }]
+                },
+                {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            );
+
+            // 症状统计
+            const symptoms = {};
+            records.forEach(r => {
+                if (r.symptoms && Array.isArray(r.symptoms)) {
+                    r.symptoms.forEach(s => {
+                        symptoms[s] = (symptoms[s] || 0) + 1;
+                    });
+                }
+            });
+
+            const symptomLabels = Object.keys(symptoms);
+            const symptomCounts = Object.values(symptoms);
+
+            if (symptomLabels.length > 0) {
+                createChart(
+                    document.getElementById('symptomsChart').getContext('2d'),
+                    'doughnut',
+                    {
+                        labels: symptomLabels,
+                        datasets: [{
+                            data: symptomCounts,
+                            backgroundColor: [
+                                'rgba(102, 126, 234, 0.8)',
+                                'rgba(118, 75, 162, 0.8)',
+                                'rgba(255, 107, 107, 0.8)',
+                                'rgba(255, 193, 7, 0.8)',
+                                'rgba(76, 175, 80, 0.8)'
+                            ]
+                        }]
+                    }
+                );
+            }
+        }
+
+        function exportToCSV() {
+            const records = JSON.parse(localStorage.getItem('healthRecords') || '[]');
+            if (records.length === 0) {
+                alert('没有记录可以导出');
+                return;
+            }
+
+            const keys = Object.keys(records[0]);
+            let csv = keys.join(',') + '\n';
+
+            records.forEach(record => {
+                const row = keys.map(key => {
+                    const value = record[key];
+                    if (Array.isArray(value)) {
+                        return '"' + value.join('; ') + '"';
+                    }
+                    return '"' + (value || '') + '"';
+                });
+                csv += row.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '健康记录_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        function deleteRecord(index) {
+            const records = JSON.parse(localStorage.getItem('healthRecords') || '[]');
+            if (index >= 0 && index < records.length) {
+                const recordDate = records[index].date;
+                const confirmed = confirm(`确定要删除 ${recordDate} 的记录吗？\n\n此操作无法撤销！`);
+                if (confirmed) {
+                    records.splice(index, 1);
+                    localStorage.setItem('healthRecords', JSON.stringify(records));
+                    alert('✓ 记录已成功删除！');
+                    renderAnalytics(); // 重新渲染页面以更新统计和图表
+                }
+            } else {
+                alert('⚠️ 无效的记录！');
+            }
+        }
+
+        // 页面加载时渲染分析
+        renderAnalytics();
+    </script>
+</body>
+</html>

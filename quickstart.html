@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速入门指南 - 每日健康信息记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 0;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.8em;
+        }
+
+        .section h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin: 15px 0 10px 0;
+            margin-left: 30px;
+        }
+
+        .step-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-box ol {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .step-box li {
+            margin-bottom: 8px;
+        }
+
+        .tip-box {
+            background: #e8f4f8;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            color: #333;
+        }
+
+        .tip-box strong {
+            color: #667eea;
+        }
+
+        ul {
+            margin-left: 30px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .highlight strong {
+            color: #ff9800;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 25px;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-wrapper">
+                <a href="start.html" class="back-btn">← 返回首页</a>
+            </div>
+            <h1>🚀 快速入门指南</h1>
+            <p>5分钟学会使用每日健康信息记录系统</p>
+        </header>
+
+        <div class="content">
+            <!-- 30秒快速开始 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">⚡</span>
+                    <span>30秒快速开始</span>
+                </div>
+
+                <h3>第一步：打开应用</h3>
+                <div class="step-box">
+                    <ol>
+                        <li>在文件夹中找到 <code>index.html</code></li>
+                        <li>双击打开或右键选择用浏览器打开（推荐使用 Chrome、Firefox 或 Edge）</li>
+                    </ol>
+                </div>
+
+                <h3>第二步：填写今天的健康信息</h3>
+                <div class="step-box">
+                    <ol>
+                        <li><strong>睡眠信息</strong>：输入昨晚的睡眠时长和质量评分</li>
+                        <li><strong>头痛记录</strong>（可选）：如果有头痛，记录时间、强度和症状</li>
+                        <li><strong>认知状态</strong>：评估工作记忆、决策能力等</li>
+                        <li><strong>压力等级</strong>：滑动滑块评分</li>
+                    </ol>
+                </div>
+
+                <h3>第三步：保存记录</h3>
+                <div class="tip-box">
+                    点击绿色的"<strong>✓ 保存记录</strong>"按钮，完成！✨
+                </div>
+            </div>
+
+            <!-- 查看数据分析 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">📊</span>
+                    <span>查看数据分析</span>
+                </div>
+                <p>记录几天数据后，打开 <code>analytics.html</code> 查看：</p>
+                <ul>
+                    <li>📈 趋势图表</li>
+                    <li>📊 统计数据</li>
+                    <li>🔍 详细数据表格</li>
+                </ul>
+            </div>
+
+            <!-- 交互式控件说明 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">🎮</span>
+                    <span>交互式控件说明</span>
+                </div>
+
+                <h3>按钮选择（1-5分）</h3>
+                <div class="code-block">
+点击对应数字按钮即可选择：
+[1] [2] [3] [4] [5]
+
+当前选择会变成紫色高亮。
+                </div>
+
+                <h3>滑块选择（0-10分）</h3>
+                <div class="code-block">
+拖动滑块，实时显示分数：
+●━━━━━━━━━ (5/10)
+                </div>
+
+                <h3>复选框（多选）</h3>
+                <div class="code-block">
+☑ 恶心
+☐ 眩晕
+☑ 畏光
+
+勾选所有适用症状。
+                </div>
+            </div>
+
+            <!-- 使用技巧 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">💡</span>
+                    <span>使用技巧</span>
+                </div>
+
+                <h3>💾 定时记录</h3>
+                <ul>
+                    <li><strong>最佳时间</strong>：每晚睡前或早起时</li>
+                    <li><strong>频率</strong>：坚持每天填写</li>
+                    <li><strong>效果</strong>：2周后开始看到趋势</li>
+                </ul>
+
+                <h3>📋 准确填写</h3>
+                <ul>
+                    <li><strong>睡眠时长</strong>：包括所有睡眠时间，精确到0.5小时</li>
+                    <li><strong>质量评分</strong>：参考提供的说明（1=入睡困难，5=深睡充足）</li>
+                    <li><strong>详细记录</strong>：在用药和干预栏详细描述，便于后期分析</li>
+                </ul>
+
+                <h3>📊 数据管理</h3>
+                <ul>
+                    <li><strong>查看所有记录</strong>：按 F12，在 Console 输入 <code>loadRecords()</code></li>
+                    <li><strong>导出数据</strong>：在分析页面点击"📥 导出CSV"按钮</li>
+                    <li><strong>定期备份</strong>：每周导出一次数据到 Excel 保存</li>
+                </ul>
+            </div>
+
+            <!-- 常见操作 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">🔧</span>
+                    <span>常见操作</span>
+                </div>
+
+                <h3>如何删除不需要的记录？</h3>
+                <div class="step-box">
+                    <ol>
+                        <li>打开数据分析页面 <code>analytics.html</code></li>
+                        <li>向下滚动到"详细记录"表格</li>
+                        <li>找到要删除的记录，点击右侧红色"删除"按钮</li>
+                        <li>在弹出的确认对话框中确认删除</li>
+                        <li>记录将立即删除，图表和统计自动更新</li>
+                    </ol>
+                </div>
+
+                <h3>如何备份我的数据？</h3>
+                <div class="step-box">
+                    <ol>
+                        <li>打开 <code>analytics.html</code></li>
+                        <li>点击"📥 导出CSV"按钮</li>
+                        <li>选择保存位置</li>
+                        <li>在 Excel 或 Google Sheets 中打开</li>
+                    </ol>
+                </div>
+
+                <h3>如何在手机上使用？</h3>
+                <div class="step-box">
+                    <ol>
+                        <li>将 <code>index.html</code> 和 <code>analytics.html</code> 上传到云存储（如 Google Drive）</li>
+                        <li>在手机浏览器中打开</li>
+                        <li>界面会自动适配手机屏幕</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 三种记录方法 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">🎯</span>
+                    <span>三种记录方法</span>
+                </div>
+
+                <h3>方法1：简化版（2分钟）</h3>
+                <p>只填必填项：</p>
+                <ul>
+                    <li>日期</li>
+                    <li>睡眠时长</li>
+                    <li>睡眠质量</li>
+                </ul>
+
+                <h3>方法2：标准版（5分钟）</h3>
+                <p>填写主要信息：</p>
+                <ul>
+                    <li>睡眠信息 ✓</li>
+                    <li>头痛记录（如有）</li>
+                    <li>认知状态</li>
+                    <li>压力等级</li>
+                </ul>
+
+                <h3>方法3：完整版（10分钟）</h3>
+                <p>填写所有信息：</p>
+                <ul>
+                    <li>上述所有内容</li>
+                    <li>伴随症状详细记录</li>
+                    <li>用药及干预信息</li>
+                    <li>详细备注</li>
+                </ul>
+
+                <div class="highlight">
+                    <strong>💡 建议</strong>：坚持一种方法，每天按同样方式填写，这样数据对比更有意义。
+                </div>
+            </div>
+
+            <!-- 数据分析 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">📈</span>
+                    <span>如何分析我的数据</span>
+                </div>
+
+                <h3>观察的关键指标</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>指标</th>
+                            <th>目标范围</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>睡眠时长</td>
+                            <td>7-9 小时</td>
+                            <td>过多过少都可能影响健康</td>
+                        </tr>
+                        <tr>
+                            <td>睡眠质量</td>
+                            <td>4-5 分</td>
+                            <td>睡眠充足且深度好</td>
+                        </tr>
+                        <tr>
+                            <td>头痛频率</td>
+                            <td>越少越好</td>
+                            <td>跟踪是否有明显模式</td>
+                        </tr>
+                        <tr>
+                            <td>压力等级</td>
+                            <td>0-3 分</td>
+                            <td>保持低压力状态</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>寻找关联关系</h3>
+                <ul>
+                    <li>💤 睡眠不足时，压力是否会升高？</li>
+                    <li>🤕 头痛频繁出现在特定日期吗？</li>
+                    <li>🧠 压力大时，认知状态是否下降？</li>
+                    <li>👃 鼻腔堵塞是否影响睡眠质量？</li>
+                </ul>
+
+                <h3>生成报告</h3>
+                <div class="step-box">
+                    <ol>
+                        <li>收集2周数据</li>
+                        <li>打开分析页面查看图表</li>
+                        <li>导出 CSV 数据到 Excel</li>
+                        <li>制作对比分析表格</li>
+                        <li>与医生分享</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 故障排除 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">🆘</span>
+                    <span>故障排除</span>
+                </div>
+
+                <h3>❓ 页面加载不了</h3>
+                <ul>
+                    <li>✅ 确认在浏览器中打开（不是用记事本）</li>
+                    <li>✅ 检查网络连接（需要加载 Chart.js 库）</li>
+                    <li>✅ 尝试用不同浏览器</li>
+                </ul>
+
+                <h3>❓ 记录没有保存</h3>
+                <ul>
+                    <li>✅ 检查必填项是否都填了（星号*标记）</li>
+                    <li>✅ 确认点击了"保存记录"按钮</li>
+                    <li>✅ 查看是否收到成功提示（绿色消息）</li>
+                </ul>
+
+                <h3>❓ 数据丢失了</h3>
+                <ul>
+                    <li>⚠️ 清除浏览器缓存会删除本地数据</li>
+                    <li>✅ 建议定期导出备份</li>
+                    <li>✅ 不同浏览器的数据不共享</li>
+                </ul>
+
+                <h3>❓ 分析页面打不开</h3>
+                <ul>
+                    <li>✅ 确保 <code>analytics.html</code> 文件在同一文件夹</li>
+                    <li>✅ 检查网络连接（Canvas.js 需要在线加载）</li>
+                    <li>✅ 尝试刷新页面</li>
+                </ul>
+            </div>
+
+            <!-- 健康知识 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">🎓</span>
+                    <span>健康记录小知识</span>
+                </div>
+
+                <h3>为什么要记录睡眠质量？</h3>
+                <ul>
+                    <li>帮助识别睡眠问题</li>
+                    <li>追踪睡眠改善效果</li>
+                    <li>发现影响睡眠的因素</li>
+                </ul>
+
+                <h3>为什么记录认知状态？</h3>
+                <ul>
+                    <li>识别记忆力下降的时期</li>
+                    <li>了解压力对思维的影响</li>
+                    <li>发现最佳工作状态时间</li>
+                </ul>
+
+                <h3>为什么追踪头痛？</h3>
+                <ul>
+                    <li>识别头痛的触发因素</li>
+                    <li>评估治疗效果</li>
+                    <li>向医生提供详细信息</li>
+                </ul>
+            </div>
+
+            <!-- 最后 -->
+            <div class="section" style="border-bottom: none; text-align: center;">
+                <h2 style="color: #667eea; font-size: 1.5em; margin-bottom: 20px;">🎉 现在就开始吧！</h2>
+                <p style="font-size: 1.1em; color: #666; line-height: 1.8;">
+                    打开 <code>index.html</code> 记录您的第一条健康信息<br>
+                    <br>
+                    <strong style="color: #667eea; font-size: 1.2em;">每天5分钟，坚持记录，发现身体的规律</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

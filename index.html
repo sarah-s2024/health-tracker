@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日健康信息记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 0;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.5em;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        textarea,
+        select {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .scale-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .scale-btn {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .scale-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .scale-btn.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .slider-container {
+            margin-top: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .range-value {
+            display: inline-block;
+            min-width: 40px;
+            padding: 5px 10px;
+            background: #f0f4ff;
+            border-radius: 5px;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item label {
+            margin-bottom: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .cognitive-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .cognitive-item {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .cognitive-item-title {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 14px 40px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .reset-btn {
+            background: #f0f0f0;
+            color: #666;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .reset-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .success-text {
+            flex-grow: 1;
+        }
+
+        .success-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .success-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .cognitive-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-wrapper">
+                <a href="start.html" class="back-btn">← 返回首页</a>
+                <h1>📋 每日健康信息记录</h1>
+            </div>
+            <p>记录您的每日健康状态，追踪健康趋势</p>
+        </header>
+
+        <div class="form-container">
+            <div id="successMessage" class="success-message">
+                <div class="success-content">
+                    <span class="success-text">✓ 记录已成功保存！</span>
+                    <button class="success-button">返回首页</button>
+                </div>
+            </div>
+
+            <form id="healthForm">
+                <!-- 基础信息 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">📅</span>
+                        <span>基础信息</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">记录日期 *</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 睡眠信息 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">😴</span>
+                        <span>睡眠信息</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sleepDuration">睡眠时长 (小时) *</label>
+                            <input type="number" id="sleepDuration" name="sleepDuration" min="0" max="24" step="0.5" placeholder="如: 7.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label>睡眠质量 (1-5分) *</label>
+                            <div class="scale-container">
+                                <button type="button" class="scale-btn" data-value="1" data-target="sleepQuality">1</button>
+                                <button type="button" class="scale-btn" data-value="2" data-target="sleepQuality">2</button>
+                                <button type="button" class="scale-btn" data-value="3" data-target="sleepQuality">3</button>
+                                <button type="button" class="scale-btn" data-value="4" data-target="sleepQuality">4</button>
+                                <button type="button" class="scale-btn" data-value="5" data-target="sleepQuality">5</button>
+                            </div>
+                            <input type="hidden" id="sleepQuality" name="sleepQuality" required>
+                            <p class="help-text">
+                                <strong>评分说明：</strong><br>
+                                1分：入睡困难或多次醒来<br>
+                                2分：浅睡/早醒<br>
+                                3分：一般，略有疲倦<br>
+                                4分：良好，醒后清爽<br>
+                                5分：极佳，深睡充分
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 头痛记录 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">🤕</span>
+                        <span>头痛记录</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="headacheTime">头痛发作时间</label>
+                            <input type="time" id="headacheTime" name="headacheTime">
+                        </div>
+                        <div class="form-group">
+                            <label for="headacheDuration">头痛持续时间 (分钟)</label>
+                            <input type="number" id="headacheDuration" name="headacheDuration" min="0" placeholder="如: 60">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="headacheIntensity">头痛强度 (0-10分)</label>
+                            <div class="slider-container">
+                                <input type="range" id="headacheIntensity" name="headacheIntensity" min="0" max="10" value="0">
+                                <span class="range-value"><span id="headacheIntensityValue">0</span>/10</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label>伴随症状</label>
+                            <div class="symptoms-grid">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="symptom_nausea" name="symptoms" value="恶心">
+                                    <label for="symptom_nausea">恶心</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="symptom_dizziness" name="symptoms" value="眩晕">
+                                    <label for="symptom_dizziness">眩晕</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="symptom_photophobia" name="symptoms" value="畏光">
+                                    <label for="symptom_photophobia">畏光</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="symptom_phonophobia" name="symptoms" value="畏声音">
+                                    <label for="symptom_phonophobia">畏声音</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="symptom_other" name="symptoms" value="其他">
+                                    <label for="symptom_other">其他</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 鼻腔信息 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">👃</span>
+                        <span>鼻腔通畅度 (1-5分)</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="scale-container">
+                                <button type="button" class="scale-btn" data-value="1" data-target="nasalPatency">1</button>
+                                <button type="button" class="scale-btn" data-value="2" data-target="nasalPatency">2</button>
+                                <button type="button" class="scale-btn" data-value="3" data-target="nasalPatency">3</button>
+                                <button type="button" class="scale-btn" data-value="4" data-target="nasalPatency">4</button>
+                                <button type="button" class="scale-btn" data-value="5" data-target="nasalPatency">5</button>
+                            </div>
+                            <input type="hidden" id="nasalPatency" name="nasalPatency">
+                            <p class="help-text">
+                                <strong>评分说明：</strong><br>
+                                1分：双侧严重堵塞，呼吸困难<br>
+                                2分：单侧明显堵塞或轻微压力感<br>
+                                3分：轻微不通但可正常呼吸<br>
+                                4分：基本通畅<br>
+                                5分：完全通畅
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 认知状态 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">🧠</span>
+                        <span>认知状态 (各1-5分)</span>
+                    </div>
+                    <div class="cognitive-grid">
+                        <!-- 工作记忆 -->
+                        <div class="cognitive-item">
+                            <div class="cognitive-item-title">工作记忆</div>
+                            <div class="scale-container">
+                                <button type="button" class="scale-btn" data-value="1" data-target="workingMemory">1</button>
+                                <button type="button" class="scale-btn" data-value="2" data-target="workingMemory">2</button>
+                                <button type="button" class="scale-btn" data-value="3" data-target="workingMemory">3</button>
+                                <button type="button" class="scale-btn" data-value="4" data-target="workingMemory">4</button>
+                                <button type="button" class="scale-btn" data-value="5" data-target="workingMemory">5</button>
+                            </div>
+                            <input type="hidden" id="workingMemory" name="workingMemory">
+                            <p class="help-text" style="margin-top: 10px;">
+                                <strong>评分说明：</strong><br>
+                                1分：经常忘记、注意力极差<br>
+                                2分：偶尔忘记，需提醒<br>
+                                3分：能维持注意，但易分心<br>
+                                4-5分：记忆清晰，注意力集中
+                            </p>
+                        </div>
+
+                        <!-- 决策能力 -->
+                        <div class="cognitive-item">
+                            <div class="cognitive-item-title">决策疲劳</div>
+                            <div class="scale-container">
+                                <button type="button" class="scale-btn" data-value="1" data-target="decisionFatigue">1</button>
+                                <button type="button" class="scale-btn" data-value="2" data-target="decisionFatigue">2</button>
+                                <button type="button" class="scale-btn" data-value="3" data-target="decisionFatigue">3</button>
+                                <button type="button" class="scale-btn" data-value="4" data-target="decisionFatigue">4</button>
+                                <button type="button" class="scale-btn" data-value="5" data-target="decisionFatigue">5</button>
+                            </div>
+                            <input type="hidden" id="decisionFatigue" name="decisionFatigue">
+                            <p class="help-text" style="margin-top: 10px;">
+                                <strong>评分说明：</strong><br>
+                                1分：难以决策，犹豫频繁<br>
+                                2分：决策缓慢，需他人建议<br>
+                                3分：可决策但反应较慢<br>
+                                4-5分：判断迅速，自信且清晰
+                            </p>
+                        </div>
+
+                        <!-- 信息处理速度 -->
+                        <div class="cognitive-item">
+                            <div class="cognitive-item-title">信息处理速度</div>
+                            <div class="scale-container">
+                                <button type="button" class="scale-btn" data-value="1" data-target="processingSpeed">1</button>
+                                <button type="button" class="scale-btn" data-value="2" data-target="processingSpeed">2</button>
+                                <button type="button" class="scale-btn" data-value="3" data-target="processingSpeed">3</button>
+                                <button type="button" class="scale-btn" data-value="4" data-target="processingSpeed">4</button>
+                                <button type="button" class="scale-btn" data-value="5" data-target="processingSpeed">5</button>
+                            </div>
+                            <input type="hidden" id="processingSpeed" name="processingSpeed">
+                            <p class="help-text" style="margin-top: 10px;">
+                                <strong>评分说明：</strong><br>
+                                1分：思考迟缓，表达困难<br>
+                                2分：反应慢，需重复信息<br>
+                                3分：理解较快，但略有延迟<br>
+                                4-5分：思维敏捷，表达流畅
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 压力源与压力等级 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">😰</span>
+                        <span>压力源与压力等级</span>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label for="stressSource">压力源 (可多选，用逗号分隔)</label>
+                            <input type="text" id="stressSource" name="stressSource" placeholder="如: 工作, 人际关系, 身体不适">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="stressLevel">压力等级 (0-10分)</label>
+                            <div class="slider-container">
+                                <input type="range" id="stressLevel" name="stressLevel" min="0" max="10" value="0">
+                                <span class="range-value"><span id="stressLevelValue">0</span>/10</span>
+                            </div>
+                            <p class="help-text">0: 无压力 → 10: 极度紧张</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 用药与干预 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">💊</span>
+                        <span>用药与干预</span>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label for="medication">用药及处理方式</label>
+                            <textarea id="medication" name="medication" placeholder="如: 服用泰诺, 热敷, 按摩, 冷敷等"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label for="medicationEffect">干预效果</label>
+                            <textarea id="medicationEffect" name="medicationEffect" placeholder="如: 服用药物后1小时起效, 按摩30分钟后缓解等"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 其他备注 -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">📝</span>
+                        <span>其他备注</span>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label for="notes">备注 (可选)</label>
+                            <textarea id="notes" name="notes" placeholder="记录任何其他相关信息..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 提交按钮 -->
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">✓ 保存记录</button>
+                    <button type="reset" class="reset-btn">↻ 清空表单</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 设置今天的日期
+        document.getElementById('date').valueAsDate = new Date();
+
+        // 量表按钮处理
+        document.querySelectorAll('.scale-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = btn.dataset.target;
+                const value = btn.dataset.value;
+
+                // 移除同组的其他选中状态
+                document.querySelectorAll(`.scale-btn[data-target="${target}"]`).forEach(b => {
+                    b.classList.remove('selected');
+                });
+
+                // 添加当前按钮的选中状态
+                btn.classList.add('selected');
+
+                // 更新隐藏的input值
+                document.getElementById(target).value = value;
+            });
+        });
+
+        // 滑块值显示
+        document.getElementById('headacheIntensity').addEventListener('input', (e) => {
+            document.getElementById('headacheIntensityValue').textContent = e.target.value;
+        });
+
+        document.getElementById('stressLevel').addEventListener('input', (e) => {
+            document.getElementById('stressLevelValue').textContent = e.target.value;
+        });
+
+        // 表单提交
+        document.getElementById('healthForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // 收集表单数据
+            const formData = new FormData(document.getElementById('healthForm'));
+            const data = {
+                date: formData.get('date'),
+                sleepDuration: formData.get('sleepDuration'),
+                sleepQuality: formData.get('sleepQuality'),
+                headacheTime: formData.get('headacheTime'),
+                headacheDuration: formData.get('headacheDuration'),
+                headacheIntensity: formData.get('headacheIntensity'),
+                symptoms: Array.from(document.querySelectorAll('input[name="symptoms"]:checked')).map(e => e.value),
+                nasalPatency: formData.get('nasalPatency'),
+                workingMemory: formData.get('workingMemory'),
+                decisionFatigue: formData.get('decisionFatigue'),
+                processingSpeed: formData.get('processingSpeed'),
+                stressSource: formData.get('stressSource'),
+                stressLevel: formData.get('stressLevel'),
+                medication: formData.get('medication'),
+                medicationEffect: formData.get('medicationEffect'),
+                notes: formData.get('notes')
+            };
+
+            // 保存到localStorage
+            let records = JSON.parse(localStorage.getItem('healthRecords') || '[]');
+            records.push(data);
+            localStorage.setItem('healthRecords', JSON.stringify(records));
+
+            // 显示成功消息
+            const successMsg = document.getElementById('successMessage');
+            successMsg.classList.add('show');
+            
+            // 清空表单
+            document.getElementById('healthForm').reset();
+            
+            // 重新设置日期为今天
+            setTimeout(() => {
+                document.getElementById('date').valueAsDate = new Date();
+            }, 0);
+            
+            // 清除所有按钮的选中状态
+            document.querySelectorAll('.scale-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 3000);
+
+            // 日志打印
+            console.log('记录已保存:', data);
+            console.log('所有记录:', records);
+        });
+
+        // 加载之前的记录（仅用于演示）
+        window.loadRecords = () => {
+            const records = JSON.parse(localStorage.getItem('healthRecords') || '[]');
+            console.table(records);
+            return records;
+        };
+
+        // 清空所有记录
+        window.clearAllRecords = () => {
+            if (confirm('确定要清空所有记录吗？')) {
+                localStorage.removeItem('healthRecords');
+                console.log('所有记录已清空');
+            }
+        };
+
+        // 导出记录为CSV
+        window.exportToCSV = () => {
+            const records = JSON.parse(localStorage.getItem('healthRecords') || '[]');
+            if (records.length === 0) {
+                alert('没有记录可以导出');
+                return;
+            }
+
+            const keys = Object.keys(records[0]);
+            let csv = keys.join(',') + '\n';
+
+            records.forEach(record => {
+                const row = keys.map(key => {
+                    const value = record[key];
+                    if (Array.isArray(value)) {
+                        return '"' + value.join('; ') + '"';
+                    }
+                    return '"' + (value || '') + '"';
+                });
+                csv += row.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '健康记录_' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        };
+
+        // 成功消息返回首页按钮
+        document.querySelector('.success-button').addEventListener('click', () => {
+            window.location.href = 'start.html'; // 返回首页
+        });
+
+        console.log('%c健康信息记录系统', 'font-size: 16px; color: #667eea; font-weight: bold;');
+        console.log('%c快捷命令:', 'font-size: 12px; color: #666;');
+        console.log('• loadRecords() - 查看所有记录');
+        console.log('• clearAllRecords() - 清空所有记录');
+        console.log('• exportToCSV() - 导出为CSV文件');
+    </script>
+</body>
+</html>
